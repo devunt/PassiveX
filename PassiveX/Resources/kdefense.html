@@ -1,0 +1,298 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="utf-8">
+    <title>Kings Online Security</title>
+</head>
+
+<body>
+    Kings Online Security 제어 중계 페이지입니다.
+    
+    <!-- JSON Library for Legacy web browsers -->
+    <script type="text/javascript">
+        "object"!==typeof JSON&&(JSON={});
+        (function(){function m(a){return 10>a?"0"+a:a}function r(){return this.valueOf()}function t(a){u.lastIndex=0;return u.test(a)?'"'+a.replace(u,function(a){var c=w[a];return"string"===typeof c?c:"\\u"+("0000"+a.charCodeAt(0).toString(16)).slice(-4)})+'"':'"'+a+'"'}function p(a,l){var c,d,h,q,g=e,f,b=l[a];b&&"object"===typeof b&&"function"===typeof b.toJSON&&(b=b.toJSON(a));"function"===typeof k&&(b=k.call(l,a,b));switch(typeof b){case "string":return t(b);case "number":return isFinite(b)?String(b):
+        "null";case "boolean":case "null":return String(b);case "object":if(!b)return"null";e+=n;f=[];if("[object Array]"===Object.prototype.toString.apply(b)){q=b.length;for(c=0;c<q;c+=1)f[c]=p(c,b)||"null";h=0===f.length?"[]":e?"[\n"+e+f.join(",\n"+e)+"\n"+g+"]":"["+f.join(",")+"]";e=g;return h}if(k&&"object"===typeof k)for(q=k.length,c=0;c<q;c+=1)"string"===typeof k[c]&&(d=k[c],(h=p(d,b))&&f.push(t(d)+(e?": ":":")+h));else for(d in b)Object.prototype.hasOwnProperty.call(b,d)&&(h=p(d,b))&&f.push(t(d)+(e?
+        ": ":":")+h);h=0===f.length?"{}":e?"{\n"+e+f.join(",\n"+e)+"\n"+g+"}":"{"+f.join(",")+"}";e=g;return h}}var x=/^[\],:{}\s]*$/,y=/\\(?:["\\\/bfnrt]|u[0-9a-fA-F]{4})/g,z=/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g,A=/(?:^|:|,)(?:\s*\[)+/g,u=/[\\\"\u0000-\u001f\u007f-\u009f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g,v=/[\u0000\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g;
+        "function"!==typeof Date.prototype.toJSON&&(Date.prototype.toJSON=function(){return isFinite(this.valueOf())?this.getUTCFullYear()+"-"+m(this.getUTCMonth()+1)+"-"+m(this.getUTCDate())+"T"+m(this.getUTCHours())+":"+m(this.getUTCMinutes())+":"+m(this.getUTCSeconds())+"Z":null},Boolean.prototype.toJSON=r,Number.prototype.toJSON=r,String.prototype.toJSON=r);var e,n,w,k;"function"!==typeof JSON.stringify&&(w={"\b":"\\b","\t":"\\t","\n":"\\n","\f":"\\f","\r":"\\r",'"':'\\"',"\\":"\\\\"},JSON.stringify=
+        function(a,l,c){var d;n=e="";if("number"===typeof c)for(d=0;d<c;d+=1)n+=" ";else"string"===typeof c&&(n=c);if((k=l)&&"function"!==typeof l&&("object"!==typeof l||"number"!==typeof l.length))throw Error("JSON.stringify");return p("",{"":a})});"function"!==typeof JSON.parse&&(JSON.parse=function(a,e){function c(a,d){var g,f,b=a[d];if(b&&"object"===typeof b)for(g in b)Object.prototype.hasOwnProperty.call(b,g)&&(f=c(b,g),void 0!==f?b[g]=f:delete b[g]);return e.call(a,d,b)}var d;a=String(a);v.lastIndex=
+        0;v.test(a)&&(a=a.replace(v,function(a){return"\\u"+("0000"+a.charCodeAt(0).toString(16)).slice(-4)}));if(x.test(a.replace(y,"@").replace(z,"]").replace(A,"")))return d=eval("("+a+")"),"function"===typeof e?c({"":d},""):d;throw new SyntaxError("JSON.parse");})})();
+    </script>
+    
+    <!-- KOSBridge -->
+    <script type="text/javascript">
+        window.onload = function () {
+            function createHttpRequest() {
+                var httpFactories = [
+                    function () {
+                            return new XMLHttpRequest();
+                    },
+                    function () {
+                            return new ActiveXObject('Microsoft.XMLHTTP');
+                    },
+                    function () {
+                            return new ActiveXObject('Msxml3.XMLHTTP');
+                    },
+                    function () {
+                            return new ActiveXObject('Msxml2.XMLHTTP');
+                    }
+                ];
+
+                var httpRequest = null;
+
+                for (var i = 0; i < httpFactories.length; i++) {
+                    try {
+                        httpRequest = httpFactories[i]();
+                    } catch (e) {
+                        continue;
+                    }
+
+                    break;
+                }
+
+                return httpRequest;
+            }
+
+            function addEventListener(object, event, handler) {
+                if (typeof object === 'undefined') {
+                    return;
+                }
+
+                if (object.addEventListener) {
+                    object.addEventListener(event, handler);
+                } else if (object.attachEvent) {
+                    object.attachEvent('on' + event, handler);
+                }
+            }
+
+            function isNullOrUndefined(arg) {
+                return typeof arg === 'undefined' || arg === null;
+            }
+
+            function contains(string, find) {
+                if (isNullOrUndefined(string)) {
+                    return false;
+                }
+
+                return string.indexOf(find) >= 0;
+            }
+
+            function getBrowserType() {
+                var userAgent = window.navigator.userAgent;
+                var result = 'Unknown';
+
+                if (contains(userAgent, 'MSIE') || contains(userAgent, 'Trident')) {
+                    result = 'IE';
+                } else if (contains(userAgent, 'Edge')) {
+                    result = 'Edge';
+                } else if (contains(userAgent, 'Firefox')) {
+                    result = 'Firefox';
+                } else if (contains(userAgent, 'Opera') || contains(userAgent, 'OPR')) {
+                    result = 'Opera';
+                } else if (contains(userAgent, 'Whale')) {
+                    result = 'Whale';
+                } else if (contains(userAgent, 'Vivaldi')) {
+                    result = 'Vivaldi';
+                } else if (contains(userAgent, 'Chrome')) {
+                    result = 'Chrome';
+                } else if (contains(userAgent, 'Safari')) {
+                    result = 'Safari';
+                }
+
+                return result;
+            }
+
+            function isInternetExplorer() {
+                return getBrowserType() === 'IE';
+            }
+
+            function isNonStandardBrowser() {
+                return typeof window.postMessage === 'undefined';
+            }
+
+            function processMessage(event, callback) {
+                var requestData = null;
+                var requestDetail = null;
+                var requestId = null;
+                var origin = event.origin;
+
+                try {
+                    requestData = JSON.parse(event.data);
+                    requestDetail = requestData.data;
+                } catch (e) {
+                    var errorMsg = '[KOSBridge] Failed to decode request data: ' + e;
+                    
+                    if (typeof console !== 'undefined') {
+                        console.log(errorMsg);
+                    }
+                    
+                    callback({
+                        requestId: requestData.requestId,
+                        data: {
+                            status: -4,
+                            responseText: errorMsg
+                        },
+                        origin: origin
+                    });
+                    
+                    return;
+                }
+
+                sendRequest({
+                    method: requestDetail.method,
+                    url: requestDetail.url,
+                    data: requestDetail.data,
+                    timeout: requestData.timeout,
+                    done: function (status, responseText) {
+                        callback({
+                            requestId: requestData.requestId,
+                            data: {
+                                status: status,
+                                responseText: responseText
+                            },
+                            origin: origin
+                        });
+                    }
+                });
+            }
+
+            function sendRequest(parameters) {
+                function sendRequestInternal() {
+                    var httpRequest = createHttpRequest();
+                    var bCalled = false;
+
+                    httpRequest.open(parameters.method, parameters.url);
+                    httpRequest.onreadystatechange = function () {
+                        if (httpRequest.readyState === 4) {
+                            if (bCalled === true) {
+                                return;
+                            }
+
+                            var status;
+
+                            try {
+                                status = httpRequest.status;
+
+                                if (status === 0) {
+                                    if (typeof console !== 'undefined') {
+                                        console.log('[KOSBridge] Webpage refreshed. Ignoring error');
+                                    }
+                                    
+                                    bCalled = true;
+                                    return;
+                                }
+                                
+                                if (status !== 200) {
+                                    if (typeof console !== 'undefined') {
+                                        console.log('[KOSBridge] HTTP Request failed. Status: ' + status);
+                                    }
+                                    
+                                    status = -1;
+                                }
+                            } catch (e) {
+                                status = -2;
+                            }
+
+                            if (status === 200) {
+                            // if (true) {
+                                parameters.done(status, httpRequest.responseText);
+                            } else {
+                                parameters.done(status, '{"result":"Error"}');
+                            }
+
+                            bCalled = true;
+                        }
+                    };
+
+                    if (typeof httpRequest.onerror !== 'undefined') {
+                        httpRequest.onerror = function (event) {
+                            if (bCalled === true) {
+                                return;
+                            }
+
+                            parameters.done(-3, event.target.message);
+
+                            bCalled = true;
+                        }
+                    }
+
+                    if (typeof httpRequest.timeout !== 'undefined') {
+                        httpRequest.timeout = parameters.timeout;
+                    }
+
+                    if (typeof parameters.data !== 'undefined' || parameters !== null) {
+                        httpRequest.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                    }
+
+                    httpRequest.send(parameters.data);
+                }
+
+                if (isInternetExplorer()) {
+                    setTimeout(function () {
+                        sendRequestInternal();
+                    }, 0);
+                } else {
+                    sendRequestInternal();
+                }
+            }
+
+            if (isNonStandardBrowser()) {
+                var handshakeData = null;
+                var proxyIFrameLoaded = false;
+                var proxyURL = 'abc.com';
+                var proxyIFrame = document.createElement('IFRAME');
+                proxyIFrame.src = proxyURL;
+                proxyIFrame.style.position = 'absolute';
+                proxyIFrame.style.left = '-1000px';
+                proxyIFrame.style.top = '-1000px';
+                proxyIFrame.width = 100;
+                
+                function processMessageLegacy(handshakeData) {
+                    processMessage({
+                        origin: null,
+                        data: handshakeData
+                    }, function (result) {
+                        proxyIFrame.src = proxyURL + '#' + JSON.stringify(result);
+                        proxyIFrame.width = proxyIFrame.width == 100 ? 200 : 100;
+                    });
+                }
+                
+                addEventListener(proxyIFrame, 'load', function (event) {
+                    proxyIFrameLoaded = true;
+                    
+                    if (handshakeData !== null) {
+                        processMessageLegacy(handshakeData);
+                    }
+                });
+
+                window.document.body.appendChild(proxyIFrame);
+
+                addEventListener(window, 'resize', function (event) {
+                    var data = window.location.hash;
+                    
+                    if (data.length <= 1) {
+                        return;
+                    }
+                    
+                    data = data.substring(1);
+                    
+                    if (!proxyIFrameLoaded) {
+                        handshakeData = data;
+                        return;
+                    }
+                    
+                    processMessageLegacy(data);
+                });
+            } else {
+                addEventListener(window, 'message', function (event) {
+                    processMessage(event, function (result) {
+                        window.parent.postMessage(JSON.stringify(result), result.origin);
+                    });
+                });
+            }
+        };
+    </script>
+</body>
+
+</html>
