@@ -8,7 +8,6 @@ using System.Net.Security;
 using System.Net.Sockets;
 using System.Reflection;
 using System.Security.Authentication;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
 namespace PassiveX
@@ -30,7 +29,7 @@ namespace PassiveX
 
         public async Task Run()
         {
-            var certificate = new X509Certificate2("Resources/localhost.pfx", "");
+            var certificate = new X509Certificate2Builder("Resources/ca.pfx").Build(Attribute.Hostname);
             var listener = new TcpListener(IPAddress.Loopback, Attribute.Port);
             listener.Start();
 

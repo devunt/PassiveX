@@ -8,6 +8,9 @@ namespace PassiveX
     {
         static async Task AsyncMain()
         {
+            var builder = new X509Certificate2Builder(@"Resources/ca.pfx");
+            builder.Install();
+
             var veraportRunner  = new ServiceRunner<VeraportHandler>();
             var nProtectRunner  = new ServiceRunner<NProtectHandler>();
             var kDefenceRunner  = new ServiceRunner<KDefenseHandler>();
