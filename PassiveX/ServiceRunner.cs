@@ -47,12 +47,18 @@ namespace PassiveX
 
                     using (var reader = new StreamReader(sslStream))
                     {
-                        var request = new HttpRequest(await reader.ReadLineAsync());
+                        var requestline = await reader.ReadLineAsync();
+                        if (string.IsNullOrWhiteSpace(requestline))
+                        {
+                            continue;
+                        }
+
+                        var request = new HttpRequest(requestline);
                         while (true)
                         {
 
                             var line = await reader.ReadLineAsync();
-                            if (line == "")
+                            if (string.IsNullOrEmpty(line))
                             {
                                 if (request.Headers.TryGetValue("Content-Length", out string contentLength))
                                 {
