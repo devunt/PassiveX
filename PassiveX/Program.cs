@@ -14,11 +14,14 @@ namespace PassiveX
             var veraportRunner  = new ServiceRunner<VeraportHandler>();
             var nProtectRunner  = new ServiceRunner<NProtectHandler>();
             var kDefenceRunner  = new ServiceRunner<KDefenseHandler>();
+            var magicLineRunner = new ServiceRunner<MagicLineHandler>();
 
             await Task.WhenAll(
                 veraportRunner .Run(),
                 nProtectRunner .Run(),
                 kDefenceRunner .Run()
+                kDefenceRunner .Run(),
+                magicLineRunner.Run()
             );
         }
 
