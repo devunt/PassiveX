@@ -8,30 +8,40 @@ using Org.BouncyCastle.Security;
 using Org.BouncyCastle.Utilities;
 using Org.BouncyCastle.X509;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography.X509Certificates;
 
 namespace PassiveX
 {
-    internal class X509Certificate2Builder
+    internal static class X509Certificate2Builder
     {
         private const int KeyStrength = 2048;
-        private readonly string _rootCertPfxPath;
+        private static char[] _emptyPassword;
+        private static string _rootCertPfxPath;
+        private static Dictionary<string, X509Certificate2> _cachedCertificates;
 
-        internal X509Certificate2Builder(string rootCertPfxPath)
+        internal static void Initialize(string rootCertPfxPath)
         {
             _rootCertPfxPath = rootCertPfxPath;
+            _emptyPassword = new char[0];
+            _cachedCertificates = new Dictionary<string, X509Certificate2>();
         }
 
-        internal X509Certificate2 Build(string hostname)
+        internal static X509Certificate2 Build(string hostname)
         {
+            if (_cachedCertificates.TryGetValue(hostname, out var cachedCert))
+            {
+                return cachedCert;
+            }
+
             var random = new SecureRandom();
 
             AsymmetricKeyParameter rootCertPrivKey = null;
             Org.BouncyCastle.X509.X509Certificate rootCert = null;
             using (var stream = new FileStream(_rootCertPfxPath, FileMode.Open))
             {
-                var store = new Pkcs12Store(stream, new char[] {});
+                var store = new Pkcs12Store(stream, _emptyPassword);
                 foreach (string alias in store.Aliases)
                 {
                     if (store.IsKeyEntry(alias))
@@ -75,13 +85,16 @@ namespace PassiveX
                 var store = new Pkcs12Store();
                 store.SetKeyEntry(Guid.NewGuid().ToString(), new AsymmetricKeyEntry(subjectKeyPair.Private),
                     new[] { new X509CertificateEntry(x509) });
-                store.Save(stream, new char[] {}, random);
+                store.Save(stream, _emptyPassword, random);
 
-                return new X509Certificate2(stream.ToArray());
+                var cert = new X509Certificate2(stream.ToArray());
+                _cachedCertificates.Add(hostname, cert);
+
+                return cert;
             }
         }
 
-        internal void Install()
+        internal static void Install()
         {
             var cert = new X509Certificate2(_rootCertPfxPath);
             cert.FriendlyName = "Ministry of Cats and Kittens";
