@@ -48,7 +48,7 @@ namespace PassiveX.Handlers
                     response.SetJson(new { ResultCode = 0 });
                     break;
                 default:
-                    Console.WriteLine($"Unknwon message: {data.MessageID}");
+                    Log.W($"Unknwon message: {data.MessageID}");
                     break;
             }
 

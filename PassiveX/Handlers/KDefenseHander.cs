@@ -63,7 +63,7 @@ namespace PassiveX.Handlers
                     break;
 
                 default:
-                    Console.WriteLine($"Unknwon path: {request.Path}");
+                    Log.W($"Unknwon path: {request.Path}");
                     break;
             }
 

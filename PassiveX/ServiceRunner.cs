@@ -24,7 +24,7 @@ namespace PassiveX
             var type = typeof(T);
             Attribute = type.GetTypeInfo().GetCustomAttribute<HandlerAttribute>();
 
-            Identifier = $"{type.Name}:{Attribute.Port}";
+            Identifier = $"{type.Name}";
         }
 
         internal async Task Run()
@@ -33,12 +33,11 @@ namespace PassiveX
             var listener = new TcpListener(IPAddress.Loopback, Attribute.Port);
             listener.Start();
 
-            Console.WriteLine($"[{Identifier}] Waiting for a client to connect.");
+            Log.I($"[{Identifier}] Listening on {Attribute.Hostname}:{Attribute.Port}");
 
             while (true)
             {
                 var client = await listener.AcceptTcpClientAsync();
-                // Console.WriteLine($"[{Identifier}] Got a client connection.");
                 var sslStream = new SslStream(client.GetStream(), false);
                 try
                 {
@@ -80,6 +79,7 @@ namespace PassiveX
 
                             request.AddHeader(line);
                         }
+                        Log.D($"[{Identifier}] {request.Method} {request.Path}");
 
                         var response = await Handler.HandleRequest(request);
                         var responseBytes = response.ToBytes();

@@ -35,7 +35,7 @@ namespace PassiveX.Handlers
                         result = new { res = 0, data = await GetAxInfoData((string)data.configure.axinfourl) };
                         break;
                     default:
-                        Console.WriteLine($"Unknown command: {data.cmd}");
+                        Log.W($"Unknown command: {data.cmd}");
                         break;
                 }
 
