@@ -39,9 +39,7 @@ namespace PassiveX.Handlers
                         break;
                 }
 
-                var serialized = JsonConvert.SerializeObject(result);
-                response.Content = $"{callback}({serialized})";
-                response.Headers["Content-Type"] = "application/javascript";
+                response.SetJsonCallback(callback, result);
             }
 
             return response;

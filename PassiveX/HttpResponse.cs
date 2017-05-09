@@ -73,5 +73,12 @@ namespace PassiveX
             Headers["Content-Type"] = "application/json";
             Content = JsonConvert.SerializeObject(obj);
         }
+
+        internal void SetJsonCallback(string callback, dynamic obj)
+        {
+            Headers["Content-Type"] = "application/javascript";
+            var json = obj == null ? "{}" : JsonConvert.SerializeObject(obj);
+            Content = $"{callback}({json})";
+        }
     }
 }
