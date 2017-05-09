@@ -29,7 +29,7 @@ namespace PassiveX
 
         internal async Task Run()
         {
-            var certificate = X509Certificate2Builder.Build(Attribute.Hostname);
+            var certificate = CertificateBuilder.Build(Attribute.Hostname);
             var listener = new TcpListener(IPAddress.Loopback, Attribute.Port);
             listener.Start();
 

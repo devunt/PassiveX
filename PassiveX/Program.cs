@@ -8,8 +8,8 @@ namespace PassiveX
     {
         static async Task AsyncMain()
         {
-            X509Certificate2Builder.Initialize(@"Resources/ca.pfx");
-            X509Certificate2Builder.Install();
+            CertificateBuilder.Initialize(@"Resources/ca.pfx");
+            CertificateBuilder.Install();
 
             var veraportRunner  = new ServiceRunner<VeraportHandler>();
             var nProtectRunner  = new ServiceRunner<NProtectHandler>();

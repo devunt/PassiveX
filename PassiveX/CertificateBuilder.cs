@@ -14,7 +14,7 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace PassiveX
 {
-    internal static class X509Certificate2Builder
+    internal static class CertificateBuilder
     {
         private const int KeyStrength = 2048;
         private static char[] _emptyPassword;
