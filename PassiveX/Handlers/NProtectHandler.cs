@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 
 namespace PassiveX.Handler
 {
+    [Handler(hostname: "127.0.0.1", port: 14430)]
     class NProtectHandler : IHandler
     {
         public Task<HttpResponse> HandleRequest(HttpRequest request)

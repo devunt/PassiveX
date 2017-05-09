@@ -8,15 +8,13 @@ namespace PassiveX
     {
         static async Task AsyncMain()
         {
-            var veraportRunner  = new ServiceRunner<VeraportHandler>(16105);
-            var nProtectRunner1 = new ServiceRunner<NProtectHandler>(14430);
-            var nProtectRunner2 = new ServiceRunner<NProtectHandler>(14440);
-            var kDefenceRunner  = new ServiceRunner<KDefenseHandler>(54032);
+            var veraportRunner  = new ServiceRunner<VeraportHandler>();
+            var nProtectRunner  = new ServiceRunner<NProtectHandler>();
+            var kDefenceRunner  = new ServiceRunner<KDefenseHandler>();
 
             await Task.WhenAll(
                 veraportRunner .Run(),
-                nProtectRunner1.Run(),
-                nProtectRunner2.Run(),
+                nProtectRunner .Run(),
                 kDefenceRunner .Run()
             );
         }

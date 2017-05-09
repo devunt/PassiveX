@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Security;
 using System.Net.Sockets;
+using System.Reflection;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
@@ -14,20 +15,23 @@ namespace PassiveX
 {
     class ServiceRunner<T> where T : IHandler, new()
     {
+        HandlerAttribute Attribute { get; set; }
         string Identifier { get; set; }
-        int Port { get; set; }
         T Handler { get; set; }
 
-        public ServiceRunner(int port) {
-            Port = port;
+        public ServiceRunner() {
             Handler = new T();
-            Identifier = $"{typeof(T).Name}:{Port}";
+
+            var type = typeof(T);
+            Attribute = type.GetTypeInfo().GetCustomAttribute<HandlerAttribute>();
+
+            Identifier = $"{type.Name}:{Attribute.Port}";
         }
 
         public async Task Run()
         {
             var certificate = new X509Certificate2("Resources/localhost.pfx", "");
-            var listener = new TcpListener(IPAddress.Loopback, Port);
+            var listener = new TcpListener(IPAddress.Loopback, Attribute.Port);
             listener.Start();
 
             while (true)
