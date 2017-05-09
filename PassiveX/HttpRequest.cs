@@ -36,7 +36,7 @@ namespace PassiveX
             var qs = QueryHelpers.ParseQuery(uri.Query);
 
             Path = uri.AbsolutePath;
-            Parameters = qs.ToDictionary(kvp => { return kvp.Key; }, kvp => { return kvp.Value[0]; });
+            Parameters = qs.ToDictionary(kvp => kvp.Key, kvp => kvp.Value[0]);
 
             Headers = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
             RawContent = new byte[0];
@@ -44,7 +44,7 @@ namespace PassiveX
 
         public void AddHeader(string line)
         {
-            var pair = line.Split(new char[] { ':' }, 2);
+            var pair = line.Split(new[] { ':' }, 2);
             var name = pair[0].Trim();
             var value = pair[1].Trim();
 
@@ -58,7 +58,7 @@ namespace PassiveX
                 if (type == "application/x-www-form-urlencoded")
                 {
                     var formdata = new FormReader(Encoding.UTF8.GetString(data.ToArray())).ReadForm();
-                    Parameters = formdata.ToDictionary(kvp => { return kvp.Key; }, kvp => { return kvp.Value[0]; });
+                    Parameters = formdata.ToDictionary(kvp => kvp.Key, kvp => kvp.Value[0]);
                     return;
                 }
             }

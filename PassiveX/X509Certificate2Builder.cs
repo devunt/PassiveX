@@ -74,7 +74,7 @@ namespace PassiveX
             {
                 var store = new Pkcs12Store();
                 store.SetKeyEntry(Guid.NewGuid().ToString(), new AsymmetricKeyEntry(subjectKeyPair.Private),
-                    new X509CertificateEntry[] { new X509CertificateEntry(x509) });
+                    new[] { new X509CertificateEntry(x509) });
                 store.Save(stream, new char[] {}, random);
 
                 return new X509Certificate2(stream.ToArray());

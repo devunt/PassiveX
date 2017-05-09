@@ -33,11 +33,12 @@ namespace PassiveX
             var listener = new TcpListener(IPAddress.Loopback, Attribute.Port);
             listener.Start();
 
+            Console.WriteLine($"[{Identifier}] Waiting for a client to connect.");
+
             while (true)
             {
-                Console.WriteLine($"[{Identifier}] Waiting for a client to connect.");
                 var client = await listener.AcceptTcpClientAsync();
-                Console.WriteLine($"[{Identifier}] Got a client connection.");
+                // Console.WriteLine($"[{Identifier}] Got a client connection.");
                 var sslStream = new SslStream(client.GetStream(), false);
                 try
                 {

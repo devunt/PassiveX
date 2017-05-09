@@ -27,7 +27,7 @@ namespace PassiveX.Handler
                 }
                 else
                 {
-                    Console.WriteLine(data);
+                    Console.WriteLine($"Unknown command: {data.cmd}");
                 }
 
                 var serialized = JsonConvert.SerializeObject(result);
