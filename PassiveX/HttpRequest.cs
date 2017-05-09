@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.Extensions.Primitives;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -14,9 +12,19 @@ namespace PassiveX
         public string Path { get; private set; }
         public string Version { get; private set; }
         public Dictionary<string, string> Headers { get; private set; }
-        public string Content { get; private set; }
         public Dictionary<string, string> Parameters { get; private set; }
-        public bool Valid { get; private set; } = false;
+        public byte[] RawContent { get; set; }
+        public string Content
+        {
+            get
+            {
+                return Encoding.UTF8.GetString(RawContent);
+            }
+            set
+            {
+                RawContent = Encoding.UTF8.GetBytes(value);
+            }
+        }
 
         public HttpRequest(string requestLine)
         {
@@ -31,6 +39,7 @@ namespace PassiveX
             Parameters = qs.ToDictionary(kvp => { return kvp.Key; }, kvp => { return kvp.Value[0]; });
 
             Headers = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            RawContent = new byte[0];
         }
 
         public void AddHeader(string line)
@@ -50,16 +59,11 @@ namespace PassiveX
                 {
                     var formdata = new FormReader(Encoding.UTF8.GetString(data.ToArray())).ReadForm();
                     Parameters = formdata.ToDictionary(kvp => { return kvp.Key; }, kvp => { return kvp.Value[0]; });
-                }
-                else
-                {
-                    Content = Encoding.UTF8.GetString(data.ToArray());
+                    return;
                 }
             }
-            else
-            {
-                Content = Encoding.UTF8.GetString(data.ToArray());
-            }
+
+            RawContent = data.ToArray();
         }
     }
 }
