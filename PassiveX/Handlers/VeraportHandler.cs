@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace PassiveX.Handlers
 {
     [Handler(hostname: "127.0.0.1", port: 16105)]
-    class VeraportHandler : IHandler
+    internal class VeraportHandler : IHandler
     {
         public Task<HttpResponse> HandleRequest(HttpRequest request)
         {

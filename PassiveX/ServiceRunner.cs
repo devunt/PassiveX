@@ -12,13 +12,13 @@ using System.Threading.Tasks;
 
 namespace PassiveX
 {
-    class ServiceRunner<T> where T : IHandler, new()
+    internal class ServiceRunner<T> where T : IHandler, new()
     {
-        HandlerAttribute Attribute { get; set; }
-        string Identifier { get; set; }
-        T Handler { get; set; }
+        private HandlerAttribute Attribute { get; set; }
+        private string Identifier { get; set; }
+        private T Handler { get; set; }
 
-        public ServiceRunner() {
+        internal ServiceRunner() {
             Handler = new T();
 
             var type = typeof(T);
@@ -27,7 +27,7 @@ namespace PassiveX
             Identifier = $"{type.Name}:{Attribute.Port}";
         }
 
-        public async Task Run()
+        internal async Task Run()
         {
             var certificate = new X509Certificate2Builder("Resources/ca.pfx").Build(Attribute.Hostname);
             var listener = new TcpListener(IPAddress.Loopback, Attribute.Port);

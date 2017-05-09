@@ -6,27 +6,27 @@ using System.Text;
 
 namespace PassiveX
 {
-    class HttpRequest
+    internal class HttpRequest
     {
-        public string Method { get; private set; }
-        public string Path { get; private set; }
-        public string Version { get; private set; }
-        public Dictionary<string, string> Headers { get; private set; }
-        public Dictionary<string, string> Parameters { get; private set; }
-        public byte[] RawContent { get; set; }
-        public string Content
+        internal string Method { get; private set; }
+        internal string Path { get; private set; }
+        internal string Version { get; private set; }
+        internal Dictionary<string, string> Headers { get; }
+        internal Dictionary<string, string> Parameters { get; private set; }
+        internal byte[] RawContent { get; private set; }
+        internal string Content
         {
             get
             {
                 return Encoding.UTF8.GetString(RawContent);
             }
-            set
+            private set
             {
                 RawContent = Encoding.UTF8.GetBytes(value);
             }
         }
 
-        public HttpRequest(string requestLine)
+        internal HttpRequest(string requestLine)
         {
             var entities = requestLine.Split(' ');
             Method = entities[0];
@@ -42,7 +42,7 @@ namespace PassiveX
             RawContent = new byte[0];
         }
 
-        public void AddHeader(string line)
+        internal void AddHeader(string line)
         {
             var pair = line.Split(new[] { ':' }, 2);
             var name = pair[0].Trim();
@@ -51,19 +51,18 @@ namespace PassiveX
             Headers[name] = value;
         }
 
-        public void AddBody(IEnumerable<byte> data)
+        internal void AddBody(IEnumerable<byte> data)
         {
+            RawContent = data.ToArray();
+
             if (Headers.TryGetValue("Content-Type", out string type))
             {
                 if (type == "application/x-www-form-urlencoded")
                 {
-                    var formdata = new FormReader(Encoding.UTF8.GetString(data.ToArray())).ReadForm();
+                    var formdata = new FormReader(Content).ReadForm();
                     Parameters = formdata.ToDictionary(kvp => kvp.Key, kvp => kvp.Value[0]);
-                    return;
                 }
             }
-
-            RawContent = data.ToArray();
         }
     }
 }

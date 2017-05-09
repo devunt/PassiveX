@@ -16,11 +16,11 @@ namespace PassiveX
     internal class X509Certificate2Builder
     {
         private const int KeyStrength = 2048;
-        private readonly string rootCertPfxPath;
+        private readonly string _rootCertPfxPath;
 
-        public X509Certificate2Builder(string rootCertPfxPath)
+        internal X509Certificate2Builder(string rootCertPfxPath)
         {
-            this.rootCertPfxPath = rootCertPfxPath;
+            _rootCertPfxPath = rootCertPfxPath;
         }
 
         internal X509Certificate2 Build(string hostname)
@@ -29,7 +29,7 @@ namespace PassiveX
 
             AsymmetricKeyParameter rootCertPrivKey = null;
             Org.BouncyCastle.X509.X509Certificate rootCert = null;
-            using (var stream = new FileStream(rootCertPfxPath, FileMode.Open))
+            using (var stream = new FileStream(_rootCertPfxPath, FileMode.Open))
             {
                 var store = new Pkcs12Store(stream, new char[] {});
                 foreach (string alias in store.Aliases)
@@ -83,7 +83,7 @@ namespace PassiveX
 
         internal void Install()
         {
-            var cert = new X509Certificate2(rootCertPfxPath);
+            var cert = new X509Certificate2(_rootCertPfxPath);
             cert.FriendlyName = "Ministry of Cats and Kittens";
 
             using (var store = new X509Store(StoreName.Root, StoreLocation.CurrentUser))

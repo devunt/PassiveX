@@ -8,7 +8,7 @@ namespace PassiveX.Handlers
         public string Hostname { get; private set; }
         public int Port { get; private set; }
 
-        public HandlerAttribute(string hostname, int port)
+        internal HandlerAttribute(string hostname, int port)
         {
             Hostname = hostname;
             Port = port;

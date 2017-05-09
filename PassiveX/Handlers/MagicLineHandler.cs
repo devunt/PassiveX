@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 namespace PassiveX.Handlers
 {
     [Handler(hostname: "mlnp.dreamsecurity.com", port: 52233)]
-    class MagicLineHandler : IHandler
+    internal class MagicLineHandler : IHandler
     {
         public Task<HttpResponse> HandleRequest(HttpRequest request)
         {

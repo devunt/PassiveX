@@ -8,13 +8,13 @@ using System.Text;
 
 namespace PassiveX
 {
-    class HttpResponse
+    internal class HttpResponse
     {
-        public string Version { get; set; }
-        public HttpStatusCode StatusCode { get; set; }
-        public Dictionary<string, string> Headers { get; set; }
-        public byte[] RawContent { get; set; }
-        public string Content
+        internal string Version { get; set; }
+        internal HttpStatusCode StatusCode { get; set; }
+        internal Dictionary<string, string> Headers { get; set; }
+        internal byte[] RawContent { get; set; }
+        internal string Content
         {
             get
             {
@@ -26,7 +26,7 @@ namespace PassiveX
             }
         }
 
-        public HttpResponse()
+        internal HttpResponse()
         {
             Version = "HTTP/1.1";
             StatusCode = HttpStatusCode.OK;
@@ -34,7 +34,7 @@ namespace PassiveX
             RawContent = new byte[0];
         }
 
-        public byte[] ToBytes()
+        internal byte[] ToBytes()
         {
             Headers["Content-Length"] = RawContent.Length.ToString();
 
@@ -57,7 +57,7 @@ namespace PassiveX
             return bytes.ToArray();
         }
 
-        public void SetResource(string path, string mime = null)
+        internal void SetResource(string path, string mime = null)
         {
             if (mime == null)
             {
@@ -68,7 +68,7 @@ namespace PassiveX
             RawContent = File.ReadAllBytes(Path.Combine("Resources", path));
         }
 
-        public void SetJson(dynamic obj)
+        internal void SetJson(dynamic obj)
         {
             Headers["Content-Type"] = "application/json";
             Content = JsonConvert.SerializeObject(obj);
