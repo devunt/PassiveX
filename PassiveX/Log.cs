@@ -24,7 +24,7 @@ namespace PassiveX
 
         internal static void S(string format, params object[] args)
         {
-            Write(ConsoleColor.Green, format, args);
+            Write(ConsoleColor.DarkGreen, format, args);
         }
 
         internal static void I(string format, params object[] args)
@@ -34,12 +34,12 @@ namespace PassiveX
 
         internal static void W(string format, params object[] args)
         {
-            Write(ConsoleColor.Magenta, format, args);
+            Write(ConsoleColor.DarkYellow, format, args);
         }
 
         internal static void E(string format, params object[] args)
         {
-            Write(ConsoleColor.Red, format, args);
+            Write(ConsoleColor.DarkRed, format, args);
         }
 
         internal static void Ex(Exception ex, string format, params object[] args)
