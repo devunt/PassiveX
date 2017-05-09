@@ -11,12 +11,14 @@ namespace PassiveX
             CertificateBuilder.Initialize(@"Resources/ca.pfx");
             CertificateBuilder.Install();
 
+            var astxHandler     = new ServiceRunner<ASTxHandler>();
             var veraportRunner  = new ServiceRunner<VeraportHandler>();
             var nProtectRunner  = new ServiceRunner<NProtectHandler>();
             var kDefenceRunner  = new ServiceRunner<KDefenseHandler>();
             var magicLineRunner = new ServiceRunner<MagicLineHandler>();
 
             await Task.WhenAll(
+                astxHandler    .Run(),
                 veraportRunner .Run(),
                 nProtectRunner .Run(),
                 kDefenceRunner .Run()
