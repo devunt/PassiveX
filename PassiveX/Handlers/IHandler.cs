@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace PassiveX.Handler
+namespace PassiveX.Handlers
 {
     interface IHandler
     {

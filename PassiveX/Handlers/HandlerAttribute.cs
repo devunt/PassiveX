@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PassiveX.Handler
+namespace PassiveX.Handlers
 {
     [AttributeUsage(AttributeTargets.Class, Inherited = false)]
     sealed class HandlerAttribute : Attribute

@@ -3,7 +3,7 @@ using System;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace PassiveX.Handler
+namespace PassiveX.Handlers
 {
     [Handler(hostname: "127.0.0.1", port: 16105)]
     class VeraportHandler : IHandler

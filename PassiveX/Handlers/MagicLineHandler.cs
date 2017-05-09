@@ -2,7 +2,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace PassiveX.Handler
+namespace PassiveX.Handlers
 {
     [Handler(hostname: "mlnp.dreamsecurity.com", port: 52233)]
     class MagicLineHandler : IHandler

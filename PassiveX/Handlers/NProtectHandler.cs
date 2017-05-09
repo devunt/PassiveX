@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace PassiveX.Handler
+namespace PassiveX.Handlers
 {
     [Handler(hostname: "127.0.0.1", port: 14430)]
     class NProtectHandler : IHandler
