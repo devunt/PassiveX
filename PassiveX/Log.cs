@@ -7,6 +7,7 @@ namespace PassiveX
     internal static class Log
     {
         private static readonly Regex EscapePattern = new Regex(@"\{(.+?)\}");
+        private static readonly object Lock = new object();
 
         private static void Write(ConsoleColor color, string format, params object[] args)
         {
@@ -17,9 +18,12 @@ namespace PassiveX
                 formatted = string.Format(format, args);
             } catch (FormatException) { }
 
-            Console.ForegroundColor = color;
-            Console.WriteLine($"[{datetime}] {formatted}");
-            Console.ResetColor();
+            lock (Lock)
+            {
+                Console.ForegroundColor = color;
+                Console.WriteLine($"[{datetime}] {formatted}");
+                Console.ResetColor();
+            }
         }
 
         internal static void S(string format, params object[] args)
