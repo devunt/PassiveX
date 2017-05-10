@@ -26,7 +26,6 @@ namespace PassiveX
                 astxHandler    .Run(),
                 veraportRunner .Run(),
                 nProtectRunner .Run(),
-                kDefenceRunner .Run()
                 kDefenceRunner .Run(),
                 magicLineRunner.Run()
             );
