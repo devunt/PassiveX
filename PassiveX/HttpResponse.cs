@@ -12,7 +12,7 @@ namespace PassiveX
     {
         internal string Version { get; set; }
         internal HttpStatusCode StatusCode { get; set; }
-        internal Dictionary<string, string> Headers { get; set; }
+        internal Dictionary<string, object> Headers { get; set; }
         internal byte[] RawContent { get; set; }
         internal string Content
         {
@@ -30,24 +30,24 @@ namespace PassiveX
         {
             Version = "HTTP/1.1";
             StatusCode = HttpStatusCode.OK;
-            Headers = new Dictionary<string, string>();
+            Headers = new Dictionary<string, object>();
             RawContent = new byte[0];
         }
 
         internal byte[] ToBytes()
         {
-            Headers["Content-Length"] = RawContent.Length.ToString();
-
             var builder = new StringBuilder();
 
             builder.AppendFormat("{0} {1} {2}\r\n", Version.Trim(), (int)StatusCode, StatusCode);
-            builder.AppendFormat("{0}\r\n", string.Join("\r\n", Headers.Select(x => $"{x.Key.Trim()}: {x.Value.Trim()}")));
+            builder.AppendFormat("{0}\r\n", string.Join("\r\n", Headers.Select(x => $"{x.Key.Trim()}: {x.Value.ToString().Trim()}")));
 
             var bytes = new List<byte>();
             bytes.AddRange(Encoding.UTF8.GetBytes(builder.ToString()));
 
-            if (RawContent != null && RawContent.Length > 0)
+            if (RawContent.Any())
             {
+                Headers["Content-Length"] = RawContent.Length;
+
                 bytes.AddRange(Encoding.UTF8.GetBytes("\r\n"));
                 bytes.AddRange(RawContent);
             }
