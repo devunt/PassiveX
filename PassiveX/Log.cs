@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -64,12 +66,14 @@ namespace PassiveX
 #endif
         }
 
-        internal static void B(byte[] buffer)
+        internal static void B(IEnumerable<byte> buffer)
         {
             var sb = new StringBuilder();
             sb.AppendLine();
 
-            for (var i = 0; i < buffer.Length; i++)
+            var bytes = buffer.ToArray();
+
+            for (var i = 0; i < bytes.Length; i++)
             {
                 if (i != 0)
                 {
@@ -87,7 +91,7 @@ namespace PassiveX
                     }
                 }
 
-                sb.Append(buffer[i].ToString("X2"));
+                sb.Append(bytes[i].ToString("X2"));
             }
 
             D(sb.ToString());
