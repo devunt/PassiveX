@@ -32,6 +32,8 @@ namespace PassiveX
             StatusCode = HttpStatusCode.OK;
             Headers = new Dictionary<string, object>();
             RawContent = new byte[0];
+
+            Headers["Connection"] = "close";
         }
 
         internal byte[] ToBytes()
