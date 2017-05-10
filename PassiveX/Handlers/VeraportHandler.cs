@@ -23,7 +23,7 @@ namespace PassiveX.Handlers
                 dynamic data = rootData.data;
 
                 dynamic result = null;
-                switch ((string) data.cmd)
+                switch ((string)rootData.cmd)
                 {
                     case "getVersion":
                         result = new { res = 0, data = "9,9,9,9" };
