@@ -11,13 +11,13 @@ namespace PassiveX
         private static readonly Regex EscapePattern = new Regex(@"\{(.+?)\}");
         private static readonly object Lock = new object();
 
-        private static void Write(ConsoleColor color, string format, params object[] args)
+        private static void Write(ConsoleColor color, object format, params object[] args)
         {
             var datetime = DateTime.Now.ToString("HH:mm:ss");
             var formatted = format;
             try
             {
-                formatted = string.Format(format, args);
+                formatted = string.Format(format.ToString(), args);
             } catch (FormatException) { }
 
             lock (Lock)
@@ -28,27 +28,27 @@ namespace PassiveX
             }
         }
 
-        internal static void S(string format, params object[] args)
+        internal static void S(object format, params object[] args)
         {
             Write(ConsoleColor.DarkGreen, format, args);
         }
 
-        internal static void I(string format, params object[] args)
+        internal static void I(object format, params object[] args)
         {
             Write(ConsoleColor.Gray, format, args);
         }
 
-        internal static void W(string format, params object[] args)
+        internal static void W(object format, params object[] args)
         {
             Write(ConsoleColor.DarkYellow, format, args);
         }
 
-        internal static void E(string format, params object[] args)
+        internal static void E(object format, params object[] args)
         {
             Write(ConsoleColor.DarkRed, format, args);
         }
 
-        internal static void Ex(Exception ex, string format, params object[] args)
+        internal static void Ex(Exception ex, object format, params object[] args)
         {
 #if DEBUG
             var message = ex.ToString();
@@ -59,7 +59,7 @@ namespace PassiveX
             E(string.Format("{0}: {1}", format, message), args);
         }
 
-        internal static void D(string format, params object[] args)
+        internal static void D(object format, params object[] args)
         {
 #if DEBUG
             Write(ConsoleColor.DarkGray, format, args);
