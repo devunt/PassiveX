@@ -22,7 +22,7 @@ namespace PassiveX
             var kDefenceRunner  = new ServiceRunner<KDefenseHandler>();
             var magicLineRunner = new ServiceRunner<MagicLineHandler>();
 
-            await Task.WhenAll(
+            await await Task.WhenAny(
                 astxHandler    .Run(),
                 veraportRunner .Run(),
                 nProtectRunner .Run(),
