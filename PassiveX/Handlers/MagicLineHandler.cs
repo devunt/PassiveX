@@ -1,11 +1,12 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Threading.Tasks;
+using PassiveX.Transports;
 
 namespace PassiveX.Handlers
 {
     [Handler(hostname: "mlnp.dreamsecurity.com", port: 52233)]
-    internal class MagicLineHandler : IHandler
+    internal class MagicLineHandler : IHttpHandler
     {
         public Task<HttpResponse> HandleRequest(HttpRequest request)
         {

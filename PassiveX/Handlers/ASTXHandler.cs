@@ -1,9 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
+using PassiveX.Transports;
 
 namespace PassiveX.Handlers
 {
     [Handler(hostname: "127.0.0.1", port: 55920)]
-    internal class ASTxHandler : IHandler
+    internal class ASTxHandler : IHttpHandler
     {
         private readonly string _prefix = "/ASTX2";
 

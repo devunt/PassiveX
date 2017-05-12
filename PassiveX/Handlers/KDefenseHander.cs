@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using PassiveX.Transports;
 
 namespace PassiveX.Handlers
 {
     [Handler(hostname: "127.0.0.1", port: 64032)]
-    internal class KDefenseHandler : IHandler
+    internal class KDefenseHandler : IHttpHandler
     {
         private static byte[] mapping = new byte[] { 32, 46, 36, 91, 94, 39, 58, 62, 126, 96, 124, 45, 123, 64, 59, 43, 55, 53, 51, 50, 56, 48, 57, 49, 52, 54, 35, 125, 40, 44, 42, 95, 61, 87, 86, 88, 69, 90, 71, 70, 79, 82, 84, 74, 81, 78, 75, 85, 89, 76, 77, 66, 67, 65, 72, 68, 80, 83, 73, 60, 37, 93, 34, 38, 41, 99, 108, 120, 102, 103, 116, 113, 109, 114, 106, 104, 101, 111, 115, 112, 107, 98, 118, 100, 97, 119, 110, 122, 105, 121, 117, 33, 92, 47, 63, 55 };
         private List<string> elements = new List<string>();

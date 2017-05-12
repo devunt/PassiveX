@@ -1,9 +1,12 @@
 ﻿using System.Threading.Tasks;
+using PassiveX.Transports;
 
 namespace PassiveX.Handlers
 {
-    interface IHandler
+    internal interface IHandler<in TRequest, TResponse>
+        where TRequest : IRequest
+        where TResponse : IResponse
     {
-        Task<HttpResponse> HandleRequest(HttpRequest request);
+        Task<TResponse> HandleRequest(TRequest request);
     }
 }

@@ -5,11 +5,12 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using PassiveX.Transports;
 
 namespace PassiveX.Handlers
 {
     [Handler(hostname: "127.0.0.1", port: 16105)]
-    internal class VeraportHandler : IHandler
+    internal class VeraportHandler : IHttpHandler
     {
         public async Task<HttpResponse> HandleRequest(HttpRequest request)
         {

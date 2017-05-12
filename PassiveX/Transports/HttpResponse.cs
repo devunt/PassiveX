@@ -6,9 +6,9 @@ using System.Linq;
 using System.Net;
 using System.Text;
 
-namespace PassiveX
+namespace PassiveX.Transports
 {
-    internal class HttpResponse
+    internal class HttpResponse : IResponse
     {
         internal string Version { get; set; }
         internal HttpStatusCode StatusCode { get; set; }
@@ -36,7 +36,7 @@ namespace PassiveX
             Headers["Connection"] = "close";
         }
 
-        internal byte[] ToBytes()
+        public byte[] ToBytes()
         {
             var builder = new StringBuilder();
 

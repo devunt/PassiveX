@@ -1,9 +1,10 @@
 ﻿using System.Threading.Tasks;
+using PassiveX.Transports;
 
 namespace PassiveX.Handlers
 {
     [Handler(hostname: "127.0.0.1", port: 14430)]
-    internal class NProtectHandler : IHandler
+    internal class NProtectHandler : IHttpHandler
     {
         public Task<HttpResponse> HandleRequest(HttpRequest request)
         {

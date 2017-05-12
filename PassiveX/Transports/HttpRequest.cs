@@ -1,12 +1,12 @@
-﻿using Microsoft.AspNetCore.WebUtilities;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.AspNetCore.WebUtilities;
 
-namespace PassiveX
+namespace PassiveX.Transports
 {
-    internal class HttpRequest
+    internal class HttpRequest : IRequest
     {
         internal string Method { get; private set; }
         internal string Path { get; private set; }
