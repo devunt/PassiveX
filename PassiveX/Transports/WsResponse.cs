@@ -41,7 +41,7 @@ namespace PassiveX.Transports
                 else if (RawContent.Length < ushort.MaxValue)
                 {
                     ms.WriteByte(126);
-                    var bytes = BitConverter.GetBytes(RawContent.Length);
+                    var bytes = BitConverter.GetBytes((ushort)RawContent.Length);
                     if (BitConverter.IsLittleEndian)
                         Array.Reverse(bytes);
                     ms.Write(bytes, 0, bytes.Length);
