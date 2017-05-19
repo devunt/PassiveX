@@ -22,6 +22,7 @@ namespace PassiveX
             var veraportRunner  = new ServiceRunner<VeraportHandler>();
             var nProtectRunner  = new ServiceRunner<NProtectHandler>();
             var kDefenceRunner  = new ServiceRunner<KDefenseHandler>();
+            var crossWebRunner  = new ServiceRunner<CrossWebHandler>();
             var magicLineRunner = new ServiceRunner<MagicLineHandler>();
 
             await await Task.WhenAny(
@@ -29,6 +30,7 @@ namespace PassiveX
                 veraportRunner .Run(),
                 nProtectRunner .Run(),
                 kDefenceRunner .Run(),
+                crossWebRunner .Run(),
                 magicLineRunner.Run()
             );
         }
