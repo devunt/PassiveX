@@ -19,10 +19,20 @@ namespace PassiveX.Handlers
             switch (request.Path.Remove(0, _prefix.Length))
             {
                 case "/hello":
+                    result = new { result = "ACK", stsvr = "3" };
+                    break;
+
                 case "/alive":
-                case "/get_pclog":
                 case "/set_cert":
                     result = new { result = "ACK" };
+                    break;
+
+                case "/check":
+                    result = new { result = "ACK", data = "" };
+                    break;
+
+                case "/get_pclog":
+                    result = new { result = "ACK", pclog_data = "" };
                     break;
 
                 default:
