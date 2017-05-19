@@ -42,9 +42,9 @@ namespace PassiveX
 
             while (true)
             {
-                Log.D($"[{Identifier}] Waiting for new connection");
+                // Log.D($"[{Identifier}] Waiting for new connection");
                 var client = await listener.AcceptTcpClientAsync();
-                Log.D($"[{Identifier}] Got connection from {client.Client.RemoteEndPoint}");
+                // Log.D($"[{Identifier}] Got connection from {client.Client.RemoteEndPoint}");
                 var sslStream = new SslStream(client.GetStream(), false);
                 try
                 {
