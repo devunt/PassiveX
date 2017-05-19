@@ -14,10 +14,10 @@ namespace PassiveX
         private static void Write(ConsoleColor color, object format, params object[] args)
         {
             var datetime = DateTime.Now.ToString("HH:mm:ss");
-            var formatted = format;
+            var formatted = format ?? "(null)";
             try
             {
-                formatted = string.Format(format.ToString(), args);
+                formatted = string.Format(formatted.ToString(), args);
             } catch (FormatException) { }
 
             lock (Lock)
