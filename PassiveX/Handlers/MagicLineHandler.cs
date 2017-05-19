@@ -53,7 +53,6 @@ namespace PassiveX.Handlers
                     break;
             }
 
-            response.Headers["Access-Control-Allow-Origin"] = "*";
             return Task.FromResult(response);
         }
     }

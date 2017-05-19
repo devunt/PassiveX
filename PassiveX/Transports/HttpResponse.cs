@@ -34,6 +34,7 @@ namespace PassiveX.Transports
             RawContent = new byte[0];
 
             Headers["Connection"] = "close";
+            Headers["Access-Control-Allow-Origin"] = "*";
         }
 
         public byte[] ToBytes()
