@@ -119,7 +119,14 @@ namespace PassiveX.Transports
 
         internal dynamic GetJson()
         {
-            return JsonConvert.DeserializeObject(Content);
+            try
+            {
+                return JsonConvert.DeserializeObject(Content);
+            }
+            catch (JsonReaderException)
+            {
+                return null;
+            }
         }
     }
 
