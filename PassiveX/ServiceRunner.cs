@@ -48,7 +48,7 @@ namespace PassiveX
                 var sslStream = new SslStream(client.GetStream(), false);
                 try
                 {
-                    await sslStream.AuthenticateAsServerAsync(certificate, false, SslProtocols.Tls, true);
+                    await sslStream.AuthenticateAsServerAsync(certificate, false, SslProtocols.Tls12, false);
                     sslStream.ReadTimeout = 5000;
                     sslStream.WriteTimeout = 5000;
 
