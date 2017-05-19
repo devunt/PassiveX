@@ -1,5 +1,6 @@
 ﻿using PassiveX.Handlers;
 using System;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
 namespace PassiveX
@@ -13,7 +14,8 @@ namespace PassiveX
              * pvk2pfx -pvk ca.pvk -spc ca.cer -pfx ca.pfx
              */
 
-            CertificateBuilder.Initialize(@"Resources/ca.pfx");
+            var rootCertificate = new X509Certificate2(@"Resources/ca.pfx");
+            CertificateBuilder.Initialize(rootCertificate);
             CertificateBuilder.Install();
 
             var astxHandler     = new ServiceRunner<ASTxHandler>();
