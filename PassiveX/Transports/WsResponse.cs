@@ -10,6 +10,7 @@ namespace PassiveX.Transports
         internal WsOpcode Opcode { get; private set; }
         internal bool Finish { get; private set; }
         internal byte[] RawContent { get; set; }
+        internal WsResponse Additional { get; set; }
 
         internal string Content
         {
@@ -23,7 +24,7 @@ namespace PassiveX.Transports
 
         internal WsResponse()
         {
-            Opcode = WsOpcode.Binary;
+            Opcode = WsOpcode.Text;
             Finish = true;
             RawContent = new byte[0];
         }
@@ -56,6 +57,12 @@ namespace PassiveX.Transports
                 }
 
                 ms.Write(RawContent, 0, RawContent.Length);
+
+                if (Additional != null)
+                {
+                    var additionalBytes = Additional.ToBytes();
+                    ms.Write(additionalBytes, 0, additionalBytes.Length);
+                }
 
                 return ms.ToArray();
             }

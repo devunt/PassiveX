@@ -19,19 +19,23 @@ namespace PassiveX
             CertificateBuilder.Install();
 
             var astxHandler     = new ServiceRunner<ASTxHandler>();
+            var anysignRunner   = new ServiceRunner<AnySignHandler>();
             var veraportRunner  = new ServiceRunner<VeraportHandler>();
             var nProtectRunner  = new ServiceRunner<NProtectHandler>();
             var kDefenceRunner  = new ServiceRunner<KDefenseHandler>();
             var crossWebRunner  = new ServiceRunner<CrossWebHandler>();
             var magicLineRunner = new ServiceRunner<MagicLineHandler>();
+            var touchEnNxRunner = new ServiceRunner<TouchEnNxHandler>();
 
             await await Task.WhenAny(
                 astxHandler    .Run(),
+                anysignRunner  .Run(),
                 veraportRunner .Run(),
                 nProtectRunner .Run(),
                 kDefenceRunner .Run(),
                 crossWebRunner .Run(),
-                magicLineRunner.Run()
+                magicLineRunner.Run(),
+                touchEnNxRunner.Run()
             );
         }
 
