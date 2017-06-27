@@ -76,7 +76,7 @@ namespace PassiveX
                 }
                 catch (Exception ex)
                 {
-                    Log.Ex(ex, "Exception occured while handling request");
+                    Log.Ex(ex, $"Exception occured while handling request on {Identifier} ");
                 }
                 finally
                 {
