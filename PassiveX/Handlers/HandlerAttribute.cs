@@ -3,7 +3,7 @@
 namespace PassiveX.Handlers
 {
     [AttributeUsage(AttributeTargets.Class, Inherited = false)]
-    sealed internal class HandlerAttribute : Attribute
+    internal sealed class HandlerAttribute : Attribute
     {
         public string Hostname { get; private set; }
         public int Port { get; private set; }

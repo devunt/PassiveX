@@ -1,7 +1,7 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using Newtonsoft.Json;
 using PassiveX.Transports;
+using PassiveX.Utils;
 
 namespace PassiveX.Handlers
 {

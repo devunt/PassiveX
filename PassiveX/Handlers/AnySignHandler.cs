@@ -1,5 +1,6 @@
-﻿using PassiveX.Transports;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using PassiveX.Transports;
+using PassiveX.Utils;
 
 namespace PassiveX.Handlers
 {
@@ -36,7 +37,7 @@ namespace PassiveX.Handlers
                     InterfaceErrorCode = 0,
                     InterfaceErrorMessage = "",
                     ReturnValue = value,
-                    ReturnType = (value is int) ? "number" : "string",
+                    ReturnType = value is int ? "number" : "string",
                 },
             };
 

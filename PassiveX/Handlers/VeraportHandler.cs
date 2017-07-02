@@ -1,11 +1,12 @@
-﻿using Flurl.Http;
-using Newtonsoft.Json;
-using Org.BouncyCastle.Cms;
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using Flurl.Http;
+using Newtonsoft.Json;
+using Org.BouncyCastle.Cms;
 using PassiveX.Transports;
+using PassiveX.Utils;
 
 namespace PassiveX.Handlers
 {
@@ -21,7 +22,7 @@ namespace PassiveX.Handlers
                 var callback = request.Parameters["callback"];
                 var datafield = request.Parameters["data"];
                 dynamic rootData = JsonConvert.DeserializeObject(datafield);
-                dynamic data = rootData.data;
+                var data = rootData.data;
 
                 dynamic result = null;
                 switch ((string)rootData.cmd)

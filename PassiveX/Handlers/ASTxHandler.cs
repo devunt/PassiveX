@@ -1,6 +1,6 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using PassiveX.Transports;
+using PassiveX.Utils;
 
 namespace PassiveX.Handlers
 {

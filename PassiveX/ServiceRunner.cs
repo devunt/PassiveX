@@ -1,5 +1,4 @@
-﻿using PassiveX.Handlers;
-using System;
+﻿using System;
 using System.Collections.Async;
 using System.Collections.Generic;
 using System.IO;
@@ -12,7 +11,9 @@ using System.Security.Authentication;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using PassiveX.Handlers;
 using PassiveX.Transports;
+using PassiveX.Utils;
 
 namespace PassiveX
 {

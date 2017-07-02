@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using PassiveX.Utils;
 
-namespace PassiveX
+namespace PassiveX.Utils
 {
-    class GlobalKeyboardHook
+    internal static class GlobalKeyboardHook
     {
         public delegate void GlobalKeyDownEventHandler(int keyCode);
         public static event GlobalKeyDownEventHandler OnGlobalKeyDown;

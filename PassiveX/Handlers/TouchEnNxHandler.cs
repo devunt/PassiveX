@@ -1,6 +1,7 @@
-﻿using Newtonsoft.Json;
+﻿using System.Threading.Tasks;
+using Newtonsoft.Json;
 using PassiveX.Transports;
-using System.Threading.Tasks;
+using PassiveX.Utils;
 
 namespace PassiveX.Handlers
 {
@@ -11,7 +12,7 @@ namespace PassiveX.Handlers
         {
             var response = new WsResponse();
 
-            dynamic data = request.GetJson();
+            var data = request.GetJson();
             if (data == null)
             {
                 return Task.FromResult(response);
@@ -48,7 +49,7 @@ namespace PassiveX.Handlers
                         break;
 
                     case "native":
-                        dynamic args = data.exfunc.args;
+                        var args = data.exfunc.args;
                         switch ((string)data.exfunc.fname)
                         {
                             case "Request":

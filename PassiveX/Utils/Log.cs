@@ -2,15 +2,14 @@
 using System.Drawing;
 using System.Text;
 using System.Text.RegularExpressions;
-using PassiveX.Forms;
-using PassiveX.Utils;
 using System.Windows.Forms;
+using PassiveX.Forms;
 
-namespace PassiveX
+namespace PassiveX.Utils
 {
-    class Log
+    internal static class Log
     {
-        private static readonly Regex escape = new Regex(@"\{(.+?)\}");
+        private static readonly Regex EscapePattern = new Regex(@"\{(.+?)\}");
         internal static MainForm Form { get; set; }
 
         private static void Write(Color color, object format, params object[] args)
@@ -23,7 +22,6 @@ namespace PassiveX
             catch (FormatException) { }
 
             var datetime = DateTime.Now.ToString("HH:mm:ss");
-            var message = $"[{datetime}] {formatted}{Environment.NewLine}";
 
             Form.Invoke(() =>
             {
@@ -74,10 +72,10 @@ namespace PassiveX
 
         internal static void B(byte[] buffer)
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             sb.AppendLine();
 
-            for (int i = 0; i < buffer.Length; i++)
+            for (var i = 0; i < buffer.Length; i++)
             {
                 if (i != 0)
                 {
@@ -103,7 +101,7 @@ namespace PassiveX
 
         private static string Escape(string line)
         {
-            return escape.Replace(line, "{{$1}}");
+            return EscapePattern.Replace(line, "{{$1}}");
         }
     }
 }

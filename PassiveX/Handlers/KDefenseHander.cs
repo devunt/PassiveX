@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using PassiveX.Transports;
+using PassiveX.Utils;
 
 namespace PassiveX.Handlers
 {
