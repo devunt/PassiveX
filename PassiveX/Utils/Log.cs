@@ -73,7 +73,6 @@ namespace PassiveX.Utils
         internal static void B(byte[] buffer)
         {
             var sb = new StringBuilder();
-            sb.AppendLine();
 
             for (var i = 0; i < buffer.Length; i++)
             {
@@ -81,7 +80,8 @@ namespace PassiveX.Utils
                 {
                     if (i % 16 == 0)
                     {
-                        sb.AppendLine();
+                        D(sb.ToString());
+                        sb.Clear();
                     }
                     else if (i % 8 == 0)
                     {
@@ -95,8 +95,6 @@ namespace PassiveX.Utils
 
                 sb.Append(buffer[i].ToString("X2"));
             }
-
-            D(sb.ToString());
         }
 
         private static string Escape(string line)

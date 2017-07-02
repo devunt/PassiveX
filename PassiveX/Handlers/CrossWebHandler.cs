@@ -7,6 +7,9 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Org.BouncyCastle.Asn1.Pkcs;
+using Org.BouncyCastle.Cms;
+using Org.BouncyCastle.Crypto.Operators;
+using Org.BouncyCastle.Security;
 using PassiveX.Transports;
 using PassiveX.Utils;
 
@@ -264,22 +267,23 @@ namespace PassiveX.Handlers
                 var certId = GetCertificateId(certificatePair.Key);
                 if (certId == id)
                 {
-                    // certificate.GetRSAPublicKey().SignData(new byte[0], System.Security.Cryptography.HashAlgorithmName.SHA1, System.Security.Cryptography.RSASignaturePadding.Pkcs1);
-                    // var generator = new CmsSignedDataGenerator();
-                    // var a = new SignerInfoGeneratorBuilder();
-                    // a.Build(X509SignatureGenerator.CreateForRSA(certificate.GetRSAPrivateKey(), System.Security.Cryptography.RSASignaturePadding.Pkcs1), new byte[0]);
-                    // generator.AddSigner(, new byte[0], "");
-
                     var rsa = CertificateManager.DecryptPrivateKey(certificatePair.Value, password);
                     if (rsa == null)
                     {
                         return null;
                     }
 
-                    return null;
+                    var privateKey = DotNetUtilities.GetKeyPair(rsa).Private;
 
-                    // var signedData = rsa.SignData(data, HashAlgorithmName.SHA1, RSASignaturePadding.Pkcs1);
-                    // return Uri.EscapeDataString(Convert.ToBase64String(signedData));
+                    var signatureFactory = new Asn1SignatureFactory("SHA1WITHRSA", privateKey);
+                    var signerInfoGenerator = new SignerInfoGeneratorBuilder().Build(signatureFactory, DotNetUtilities.FromX509Certificate(certificatePair.Key));
+
+                    var generator = new CmsSignedDataGenerator();
+                    generator.AddSignerInfoGenerator(signerInfoGenerator);
+
+                    var signedData = generator.Generate(new CmsProcessableByteArray(data), true);
+
+                    return Uri.EscapeDataString(Convert.ToBase64String(signedData.GetEncoded()));
                 }
             }
 
