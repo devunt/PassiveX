@@ -1,19 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net;
-using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
+using Org.BouncyCastle.Asn1.X509;
+using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.Crypto.Generators;
+using Org.BouncyCastle.Crypto.Operators;
+using Org.BouncyCastle.Crypto.Parameters;
+using Org.BouncyCastle.Math;
+using Org.BouncyCastle.Pkcs;
+using Org.BouncyCastle.Security;
+using Org.BouncyCastle.Utilities;
+using Org.BouncyCastle.X509;
+using X509Extension = Org.BouncyCastle.Asn1.X509.X509Extension;
 
 namespace PassiveX
 {
     internal static class CertificateBuilder
     {
+        private const int KeyStrength = 2048;
+
         private static X509Certificate2 _rootCertificate;
+        private static AsymmetricKeyParameter _rootCertificatePrivateKey;
         private static Dictionary<string, X509Certificate2> _cachedCertificates;
 
         internal static void Initialize(X509Certificate2 rootCertificate)
         {
             _rootCertificate = rootCertificate;
+            _rootCertificatePrivateKey = DotNetUtilities.GetKeyPair(_rootCertificate.PrivateKey).Private;
             _cachedCertificates = new Dictionary<string, X509Certificate2>();
         }
 
@@ -24,45 +37,48 @@ namespace PassiveX
                 return cachedCert;
             }
 
-            using (var rsa = RSA.Create())
-            {
-                var request = new CertificateRequest($"CN={hostname}", rsa, HashAlgorithmName.SHA256);
+            var random = new SecureRandom();
 
-                var sanBuilder = new SubjectAlternativeNameBuilder();
-                sanBuilder.AddIpAddress(IPAddress.Loopback);
-                sanBuilder.AddDnsName(hostname);
+            var keyPairGenerator = new RsaKeyPairGenerator();
+            keyPairGenerator.Init(new KeyGenerationParameters(random, KeyStrength));
+            var subjectKeyPair = keyPairGenerator.GenerateKeyPair();
 
-                request.CertificateExtensions.Add(sanBuilder.Build());
-                request.CertificateExtensions.Add(new X509BasicConstraintsExtension(false, false, 0, false));
-                request.CertificateExtensions.Add(new X509KeyUsageExtension(X509KeyUsageFlags.DigitalSignature | X509KeyUsageFlags.KeyEncipherment, false));
-                request.CertificateExtensions.Add(new X509EnhancedKeyUsageExtension(new OidCollection { new Oid("1.3.6.1.5.5.7.3.1") }, false));
+            var certificateGenerator = new X509V3CertificateGenerator();
 
-                var serialNumber = new byte[8];
-                using (var rng = RandomNumberGenerator.Create())
-                {
-                    rng.GetBytes(serialNumber);
-                }
+            var serialNumber = BigIntegers.CreateRandomInRange(BigInteger.One, BigInteger.ValueOf(Int64.MaxValue), random);
+            certificateGenerator.SetSerialNumber(serialNumber);
 
-                var now = DateTimeOffset.UtcNow;
-                var intermidiateCertificate = request.Create(_rootCertificate, now, now.AddYears(1), serialNumber);
-                var certificate = intermidiateCertificate.CopyWithPrivateKey(rsa);
+            certificateGenerator.AddExtension(X509Extensions.BasicConstraints, true, new BasicConstraints(false));
+            certificateGenerator.AddExtension(X509Extensions.KeyUsage, true, new KeyUsage(KeyUsage.DigitalSignature | KeyUsage.KeyEncipherment));
+            certificateGenerator.AddExtension(X509Extensions.ExtendedKeyUsage, false, new ExtendedKeyUsage(KeyPurposeID.IdKPServerAuth));
 
-                // https://github.com/dotnet/corefx/issues/19888
-                certificate = new X509Certificate2(certificate.Export(X509ContentType.Pkcs12));
+            certificateGenerator.SetIssuerDN(new X509Name(_rootCertificate.Issuer));
+            certificateGenerator.SetSubjectDN(new X509Name($"CN={hostname}"));
 
-                _cachedCertificates[hostname] = certificate;
+            var notBefore = DateTime.Now.Date;
+            var notAfter = notBefore.AddYears(1);
+            certificateGenerator.SetNotBefore(notBefore);
+            certificateGenerator.SetNotAfter(notAfter);
 
-                return certificate;
-            }
+            certificateGenerator.SetPublicKey(subjectKeyPair.Public);
+            var signatureFactory = new Asn1SignatureFactory("SHA256WITHRSA", _rootCertificatePrivateKey, random);
+
+            var x509 = certificateGenerator.Generate(signatureFactory);
+
+            var certificate = new X509Certificate2(x509.GetEncoded());
+            certificate.PrivateKey = DotNetUtilities.ToRSA((RsaPrivateCrtKeyParameters)subjectKeyPair.Private);
+
+            _cachedCertificates[hostname] = certificate;
+
+            return certificate;
         }
 
         internal static void Install()
         {
-            using (var store = new X509Store(StoreName.Root, StoreLocation.CurrentUser))
-            {
-                store.Open(OpenFlags.ReadWrite);
-                store.Add(_rootCertificate);
-            }
+            var store = new X509Store(StoreName.Root, StoreLocation.CurrentUser);
+            store.Open(OpenFlags.ReadWrite);
+            store.Add(_rootCertificate);
+            store.Close();
         }
     }
 }

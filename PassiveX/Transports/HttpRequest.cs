@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
-using Microsoft.AspNetCore.WebUtilities;
+using System.Web;
 
 namespace PassiveX.Transports
 {
@@ -33,10 +34,10 @@ namespace PassiveX.Transports
             Version = entities[2];
 
             var uri = new Uri(@"https://127.0.0.1" + entities[1]);
-            var qs = QueryHelpers.ParseQuery(uri.Query);
+            var qs = HttpUtility.ParseQueryString(uri.Query);
 
             Path = uri.AbsolutePath;
-            Parameters = qs.ToDictionary(kvp => kvp.Key, kvp => kvp.Value[0]);
+            Parameters = qs.AllKeys.ToDictionary(k => k, k => qs[k]);
 
             Headers = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
             RawContent = new byte[0];
@@ -59,8 +60,10 @@ namespace PassiveX.Transports
             {
                 if (type == "application/x-www-form-urlencoded")
                 {
-                    var formdata = new FormReader(Content).ReadForm();
-                    Parameters = formdata.ToDictionary(kvp => kvp.Key, kvp => kvp.Value[0]);
+                    // var formdata = new FormReader(Content).ReadForm();
+                    // Parameters = formdata.ToDictionary(kvp => kvp.Key, kvp => kvp.Value[0]);
+                    var form = HttpUtility.ParseQueryString(Content);
+                    Parameters = form.AllKeys.ToDictionary(k => k, k => form[k]);
                 }
             }
         }

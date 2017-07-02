@@ -81,7 +81,7 @@ namespace PassiveX
                 finally
                 {
                     sslStream.Dispose();
-                    client.Dispose();
+                    client.Close();
                 }
             }
         }

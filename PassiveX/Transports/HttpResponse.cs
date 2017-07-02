@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.StaticFiles;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Web;
+using PassiveX.Utils;
 
 namespace PassiveX.Transports
 {
@@ -60,15 +60,15 @@ namespace PassiveX.Transports
             return bytes.ToArray();
         }
 
-        internal void SetResource(string path, string mime = null)
+        internal void SetResource(string filename, string mime = null)
         {
             if (mime == null)
             {
-                new FileExtensionContentTypeProvider().TryGetContentType(path, out mime);
+                mime = MimeMapping.GetMimeMapping(filename);
             }
 
             Headers["Content-Type"] = mime ?? "application/octet-stream";
-            RawContent = File.ReadAllBytes(Path.Combine("Resources", path));
+            RawContent = Resource.Get(filename);
         }
 
         internal void SetJson(dynamic obj)

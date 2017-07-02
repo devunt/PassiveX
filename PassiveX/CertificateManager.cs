@@ -9,7 +9,6 @@ using Org.BouncyCastle.Security;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 
@@ -20,21 +19,21 @@ namespace PassiveX
         internal static Dictionary<X509Certificate2, EncryptedPrivateKeyInfo> GetListFromDisk(IEnumerable<string> oids)
         {
             string[] paths;
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+
+            switch (Environment.OSVersion.Platform)
             {
-                paths = NpkiDiskPathOnWindows;
-            }
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-            {
-                paths = NpkiDiskPathOnLinux;
-            }
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-            {
-                paths = NpkiDiskPathOnMac;
-            }
-            else
-            {
-                return null;
+                case PlatformID.Win32NT:
+                    paths = NpkiDiskPathOnWindows;
+                    break;
+                case PlatformID.Unix:
+                    paths = NpkiDiskPathOnLinux;
+                    break;
+                case PlatformID.MacOSX:
+                    paths = NpkiDiskPathOnMac;
+                    break;
+                default:
+                    paths = new string[0];
+                    break;
             }
 
             var collection = new X509Certificate2Collection();
@@ -98,18 +97,7 @@ namespace PassiveX
                 var decoded = cipher.DoFinal(encryptedPrivateKeyInfo.GetEncryptedData());
 
                 var rsaParams = (RsaPrivateCrtKeyParameters)PrivateKeyFactory.CreateKey(decoded);
-
-                return RSA.Create(new RSAParameters
-                {
-                    Modulus = rsaParams.Modulus.ToByteArrayUnsigned(),
-                    Exponent = rsaParams.PublicExponent.ToByteArrayUnsigned(),
-                    D = rsaParams.Exponent.ToByteArrayUnsigned(),
-                    P = rsaParams.P.ToByteArrayUnsigned(),
-                    Q = rsaParams.Q.ToByteArrayUnsigned(),
-                    DP = rsaParams.DP.ToByteArrayUnsigned(),
-                    DQ = rsaParams.DQ.ToByteArrayUnsigned(),
-                    InverseQ = rsaParams.QInv.ToByteArrayUnsigned()
-                });
+                return DotNetUtilities.ToRSA(rsaParams);
             }
             catch (InvalidCipherTextException)
             {

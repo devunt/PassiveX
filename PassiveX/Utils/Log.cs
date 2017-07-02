@@ -1,79 +1,83 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Drawing;
 using System.Text;
 using System.Text.RegularExpressions;
+using PassiveX.Forms;
+using PassiveX.Utils;
+using System.Windows.Forms;
 
 namespace PassiveX
 {
-    internal static class Log
+    class Log
     {
-        private static readonly Regex EscapePattern = new Regex(@"\{(.+?)\}");
-        private static readonly object Lock = new object();
+        private static readonly Regex escape = new Regex(@"\{(.+?)\}");
+        internal static MainForm Form { get; set; }
 
-        private static void Write(ConsoleColor color, object format, params object[] args)
+        private static void Write(Color color, object format, params object[] args)
         {
-            var datetime = DateTime.Now.ToString("HH:mm:ss");
             var formatted = format ?? "(null)";
             try
             {
                 formatted = string.Format(formatted.ToString(), args);
-            } catch (FormatException) { }
-
-            lock (Lock)
-            {
-                Console.ForegroundColor = color;
-                Console.WriteLine($"[{datetime}] {formatted}");
-                Console.ResetColor();
             }
+            catch (FormatException) { }
+
+            var datetime = DateTime.Now.ToString("HH:mm:ss");
+            var message = $"[{datetime}] {formatted}{Environment.NewLine}";
+
+            Form.Invoke(() =>
+            {
+                var item = new ListViewItem(new[] { datetime, formatted.ToString() });
+                item.ForeColor = color;
+                Form.listView.Items.Insert(0, item);
+                Form.listView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+            });
         }
 
         internal static void S(object format, params object[] args)
         {
-            Write(ConsoleColor.DarkGreen, format, args);
+            Write(Color.Green, format, args);
         }
 
         internal static void I(object format, params object[] args)
         {
-            Write(ConsoleColor.Gray, format, args);
+            Write(Color.Black, format, args);
         }
 
         internal static void W(object format, params object[] args)
         {
-            Write(ConsoleColor.DarkYellow, format, args);
+            Write(Color.Yellow, format, args);
         }
 
         internal static void E(object format, params object[] args)
         {
-            Write(ConsoleColor.DarkRed, format, args);
+            Write(Color.Red, format, args);
         }
 
         internal static void Ex(Exception ex, object format, params object[] args)
         {
 #if DEBUG
-            var message = ex.ToString();
+            var message = ex.Message;
 #else
             var message = ex.Message;
 #endif
             message = Escape(message);
-            E(string.Format("{0}: {1}", format, message), args);
+            E($"{format}: {message}", args);
         }
 
         internal static void D(object format, params object[] args)
         {
 #if DEBUG
-            Write(ConsoleColor.DarkGray, format, args);
+            Write(Color.Gray, format, args);
 #endif
         }
 
-        internal static void B(IEnumerable<byte> buffer)
+        internal static void B(byte[] buffer)
         {
-            var sb = new StringBuilder();
+            StringBuilder sb = new StringBuilder();
             sb.AppendLine();
 
-            var bytes = buffer.ToArray();
-
-            for (var i = 0; i < bytes.Length; i++)
+            for (int i = 0; i < buffer.Length; i++)
             {
                 if (i != 0)
                 {
@@ -91,7 +95,7 @@ namespace PassiveX
                     }
                 }
 
-                sb.Append(bytes[i].ToString("X2"));
+                sb.Append(buffer[i].ToString("X2"));
             }
 
             D(sb.ToString());
@@ -99,7 +103,7 @@ namespace PassiveX
 
         private static string Escape(string line)
         {
-            return EscapePattern.Replace(line, "{{$1}}");
+            return escape.Replace(line, "{{$1}}");
         }
     }
 }

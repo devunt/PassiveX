@@ -278,9 +278,11 @@ namespace PassiveX.Handlers
                     {
                         return null;
                     }
-                    var signedData = rsa.SignData(data, HashAlgorithmName.SHA1, RSASignaturePadding.Pkcs1);
 
-                    return Uri.EscapeDataString(Convert.ToBase64String(signedData));
+                    return null;
+
+                    // var signedData = rsa.SignData(data, HashAlgorithmName.SHA1, RSASignaturePadding.Pkcs1);
+                    // return Uri.EscapeDataString(Convert.ToBase64String(signedData));
                 }
             }
 
