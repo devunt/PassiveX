@@ -66,6 +66,12 @@
     <Compile Include="CertificateBuilder.cs" />
     <Compile Include="CertificateManager.cs" />
     <Compile Include="CertificateManager.Declare.cs" />
+    <Compile Include="Forms\LogDetailForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\LogDetailForm.Designer.cs">
+      <DependentUpon>LogDetailForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -100,6 +106,9 @@
     <Compile Include="Utils\Resource.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Forms\LogDetailForm.resx">
+      <DependentUpon>LogDetailForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resources\1x1.gif" />
     <EmbeddedResource Include="Resources\1x1.png" />
     <EmbeddedResource Include="Resources\kdefense.html" />

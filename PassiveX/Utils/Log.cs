@@ -44,7 +44,7 @@ namespace PassiveX.Utils
 
         internal static void W(object format, params object[] args)
         {
-            Write(Color.Yellow, format, args);
+            Write(Color.DarkOrange, format, args);
         }
 
         internal static void E(object format, params object[] args)
@@ -55,7 +55,7 @@ namespace PassiveX.Utils
         internal static void Ex(Exception ex, object format, params object[] args)
         {
 #if DEBUG
-            var message = ex.Message;
+            var message = ex.ToString();
 #else
             var message = ex.Message;
 #endif
@@ -80,8 +80,7 @@ namespace PassiveX.Utils
                 {
                     if (i % 16 == 0)
                     {
-                        D(sb.ToString());
-                        sb.Clear();
+                        sb.AppendLine();
                     }
                     else if (i % 8 == 0)
                     {
@@ -95,6 +94,8 @@ namespace PassiveX.Utils
 
                 sb.Append(buffer[i].ToString("X2"));
             }
+
+            D(sb.ToString());
         }
 
         private static string Escape(string line)

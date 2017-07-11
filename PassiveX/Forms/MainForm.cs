@@ -42,5 +42,17 @@ namespace PassiveX.Forms
                 Task.WaitAll(runners);
             });
         }
+
+        private void listView_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            var info = listView.HitTest(e.X, e.Y);
+            var item = info.Item;
+
+            if (item != null)
+            {
+                var detailForm = new LogDetailForm { richTextBox = { Text = item.SubItems[1].Text } };
+                detailForm.ShowDialog();
+            }
+        }
     }
 }
