@@ -10,7 +10,7 @@ using PassiveX.Utils;
 
 namespace PassiveX.Handlers
 {
-    [Handler(hostname: "127.0.0.1", port: 16105)]
+    [Handler(hostname: "127.0.0.1", port: 16106)]
     internal class VeraportHandler : IHttpHandler
     {
         public async Task<HttpResponse> HandleRequest(HttpRequest request)
