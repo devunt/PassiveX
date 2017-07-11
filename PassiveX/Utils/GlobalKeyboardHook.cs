@@ -28,7 +28,7 @@ namespace PassiveX.Utils
         {
             if (_keyboardHookId == IntPtr.Zero)
             {
-                _keyboardHookId = NativeMethods.SetWindowsHookEx(NativeMethods.WH_KEYBOARD_LL, CallbackMethod, CurrentModuleHandle, 0);
+                _keyboardHookId = NativeMethods.SetWindowsHookEx(NativeMethods.WH_KEYBOARD_LL, CallbackMethod, IntPtr.Zero, 0);
                 Log.I($"Global keyboard hook installed. (ID: {_keyboardHookId})");
             }
         }

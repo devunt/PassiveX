@@ -36,7 +36,7 @@ namespace PassiveX.Transports
             var qs = HttpUtility.ParseQueryString(uri.Query);
 
             Path = uri.AbsolutePath;
-            Parameters = qs.AllKeys.ToDictionary(k => k, k => qs[k]);
+            Parameters = qs.AllKeys.Where(k => k != null).ToDictionary(k => k, k => qs[k]);
 
             Headers = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
             RawContent = new byte[0];
