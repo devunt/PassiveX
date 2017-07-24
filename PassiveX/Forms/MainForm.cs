@@ -19,7 +19,7 @@ namespace PassiveX.Forms
         {
             Log.Form = this;
 
-            var rootCertificate = new X509Certificate2(@"C:\projects\PassiveX\PassiveX\Resources/ca.pfx", "", X509KeyStorageFlags.Exportable);
+            var rootCertificate = new X509Certificate2(@"C:\projects\PassiveX\PassiveX\Resources\ca.pfx", "", X509KeyStorageFlags.Exportable | X509KeyStorageFlags.PersistKeySet);
             CertificateBuilder.Initialize(rootCertificate);
             CertificateBuilder.Install();
 
