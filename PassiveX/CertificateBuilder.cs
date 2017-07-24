@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
+using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Asn1.X509;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Generators;
@@ -55,6 +56,12 @@ namespace PassiveX
                 new SubjectKeyIdentifier(SubjectPublicKeyInfoFactory.CreateSubjectPublicKeyInfo(subjectKeyPair.Public)));
             certificateGenerator.AddExtension(X509Extensions.AuthorityKeyIdentifier, false,
                 new AuthorityKeyIdentifier(SubjectPublicKeyInfoFactory.CreateSubjectPublicKeyInfo(_rootCertificateKeyPair.Public)));
+            certificateGenerator.AddExtension(X509Extensions.CertificatePolicies, false,
+                new CertificatePolicies(
+                    new PolicyInformation(new DerObjectIdentifier("1.2.410.200004.2"), new DerSequence(
+                        new PolicyQualifierInfo("https://github.com/devunt/PassiveX"),
+                        new PolicyQualifierInfo(PolicyQualifierID.IdQtUnotice,
+                            new UserNotice(null, "PassiveX 가 자동으로 생성한 가짜 인증서입니다."))))));
 
             certificateGenerator.SetIssuerDN(new X509Name(_rootCertificate.Issuer));
             certificateGenerator.SetSubjectDN(new X509Name($"CN={hostname}"));
