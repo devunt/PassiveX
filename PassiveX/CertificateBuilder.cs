@@ -41,7 +41,10 @@ namespace PassiveX
             keyPairGenerator.Init(new KeyGenerationParameters(random, KeyStrength));
             var subjectKeyPair = keyPairGenerator.GenerateKeyPair();
 
-            var subjectAltName = new GeneralNames(new GeneralName(GeneralName.IPAddress, "127.0.0.1"));
+            var subjectAltName = new GeneralNames(new[] {
+                new GeneralName(GeneralName.IPAddress, "127.0.0.1"),
+                new GeneralName(GeneralName.DnsName, "localhost"),
+            });
 
             var certificateGenerator = new X509V3CertificateGenerator();
 
