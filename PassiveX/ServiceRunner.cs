@@ -39,7 +39,7 @@ namespace PassiveX
             var listener = new TcpListener(IPAddress.Loopback, Attribute.Port);
             listener.Start();
 
-            Log.I($"[{Identifier}] Listening on {Attribute.Hostname}:{Attribute.Port}");
+            Log.I($"[{Identifier}:{Attribute.Type}] Listening on {Attribute.Hostname}:{Attribute.Port}");
 
             while (true)
             {
